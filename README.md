@@ -23,3 +23,7 @@ Vulnerability reports for open-source PHP projects, reproduced locally (phpStudy
 | 14 | SourceCodester Barangay Resident Profiling and Information Management System 1.0 - Stored XSS via /households.php (purok) rendered raw in /reports.php | [brpms/03-存储XSS-purok.md](brpms/03-%E5%AD%98%E5%82%A8XSS-purok.md) | pending |
 | 15 | SourceCodester Barangay Resident Profiling and Information Management System 1.0 - Stored XSS via resident last_name rendered raw in /residents.php | [brpms/04-存储XSS-居民姓名.md](brpms/04-%E5%AD%98%E5%82%A8XSS-%E5%B1%85%E6%B0%91%E5%A7%93%E5%90%8D.md) | pending |
 | 16 | SourceCodester Barangay Resident Profiling and Information Management System 1.0 - Stored XSS via occupation rendered raw in /reports.php | [brpms/05-存储XSS-occupation.md](brpms/05-%E5%AD%98%E5%82%A8XSS-occupation.md) | pending |
+
+| 17 | SourceCodester CET-Tally System 1.0 - Stored XSS via team color rendered raw in /index.php (style/content/onclick) | [cet-tally/01-存储XSS-color.md](cet-tally/01-%E5%AD%98%E5%82%A8XSS-color.md) | pending |
+| 18 | SourceCodester CET-Tally System 1.0 - CSV/Excel formula injection in leaderboard & scores exports (=cmd DDE) | [cet-tally/02-CSV公式注入.md](cet-tally/02-CSV%E5%85%AC%E5%BC%8F%E6%B3%A8%E5%85%A5.md) | pending |
+| 19 | SourceCodester CET-Tally System 1.0 - Use of hard-coded default credentials admin/admin123, user/user123 printed on login page | [cet-tally/03-默认凭据.md](cet-tally/03-%E9%BB%98%E8%AE%A4%E5%87%AD%E6%8D%AE.md) | pending |
