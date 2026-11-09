@@ -1,0 +1,25 @@
+F4 POC: Secured E-Voting System otp_verify.php OTP 无速率限制爆破
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+
+== 漏洞要点 ==
+otp_verify.php:28-77 校验 OTP 时无任何尝试计数/锁定/延时；failed_login 表只在密码登录记录。
+login.php:73 OTP=rand(10000,99999)（非 CSPRNG）明文入库，有效期 24 小时（otp_verify.php:47 允许 1440 分钟）。
+=> 9 万次穷举即可在 OTP 有效期内登录任意已知密码账号（无锁定 → 爆破窗口=24h）。
+
+== 复现 ==
+1. POST /login（email+password+csrf_token）→ 302 otp_verify，OTP 已入库（SMTP 失败不影响入库）
+2. 循环 POST /otp_verify: otp_code=10000..99999（携带 verify_btn 与 csrf_token）
+   错误码返回 200 'Invalid verification code'，无任何锁定/延时/告警（爆破即证明）
+   命中码返回 302（voter→index，eleco→Admin/dashboard）
+3. 本次并行 8 个独立账号（每 worker 一个独立 PHP session），首个命中即停
+
+== 结果 ==
+命中账号: otpbrute06@local.test (user_id=35)
+猜中 OTP: 12491
+尝试用时: 67.3 秒（8 会话并行）
+登录跳转: index
+库中真实 OTP 比对: OTP-BRUTEFORCE-CONFIRMED (DB=12491)
+audit_logs 尾条: MFA Verification Successful
+otps 表该用户剩余行数: 0（命中后服务端已删除）
+
+各账号进度（被停止时的位置）: {'otpbrute01': 12501, 'otpbrute02': 12554, 'otpbrute03': 12567, 'otpbrute04': 12504, 'otpbrute05': 12581, 'otpbrute06': 12491, 'otpbrute07': 12566, 'otpbrute08': 12506}

