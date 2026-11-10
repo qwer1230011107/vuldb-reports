@@ -38,3 +38,5 @@ Vulnerability reports for open-source PHP projects, reproduced locally (phpStudy
 | 26 | SourceCodester Real Estate Property Listing App 1.0 /admin/login.php username= Use of Hard-coded Default Credentials | [real-estate-listing/01-默认凭据.md](real-estate-listing/01-%E9%BB%98%E8%AE%A4%E5%87%AD%E6%8D%AE.md) | pending |
 | 27 | SourceCodester Real Estate Property Listing App 1.0 /admin/property.php?delete= Cross-Site Request Forgery | [real-estate-listing/02-CSRF.md](real-estate-listing/02-CSRF.md) | pending |
 | 28 | SourceCodester Real Estate Property Listing App 1.0 /submit_inquiry.php?property_id= Information Disclosure via Verbose Database Error Messages | [real-estate-listing/03-信息泄露.md](real-estate-listing/03-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2.md) | pending |
+
+| 29 | SourceCodester Bill Payment Reminder with Mail Sender Using PHP, MySQL and PHPMailer 1.0 /index.php?error= Information Disclosure via Verbose Database Error Messages | [bill-payment-reminder/01-信息泄露.md](bill-payment-reminder/01-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2.md) | pending |
