@@ -40,3 +40,6 @@ Vulnerability reports for open-source PHP projects, reproduced locally (phpStudy
 | 28 | SourceCodester Real Estate Property Listing App 1.0 /submit_inquiry.php?property_id= Information Disclosure via Verbose Database Error Messages | [real-estate-listing/03-信息泄露.md](real-estate-listing/03-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2.md) | pending |
 
 | 29 | SourceCodester Bill Payment Reminder with Mail Sender Using PHP, MySQL and PHPMailer 1.0 /index.php?error= Information Disclosure via Verbose Database Error Messages | [bill-payment-reminder/01-信息泄露.md](bill-payment-reminder/01-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2.md) | pending |
+
+| 30 | SourceCodester Student Grading System with Report Card and GWA 1.0 /login.php username= Use of Hard-coded Default Credentials | [student-grading/01-默认凭据.md](student-grading/01-%E9%BB%98%E8%AE%A4%E5%87%AD%E6%8D%AE.md) | pending |
+| 31 | SourceCodester Student Grading System with Report Card and GWA 1.0 /database.sql Sensitive Data Exposure (Unauthenticated SQL Dump Download) | [student-grading/02-SQLdump暴露.md](student-grading/02-SQLdump%E6%9A%B4%E9%9C%B2.md) | pending |
