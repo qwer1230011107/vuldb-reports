@@ -43,3 +43,7 @@ Vulnerability reports for open-source PHP projects, reproduced locally (phpStudy
 
 | 30 | SourceCodester Student Grading System with Report Card and GWA 1.0 /login.php username= Use of Hard-coded Default Credentials | [student-grading/01-默认凭据.md](student-grading/01-%E9%BB%98%E8%AE%A4%E5%87%AD%E6%8D%AE.md) | pending |
 | 31 | SourceCodester Student Grading System with Report Card and GWA 1.0 /database.sql Sensitive Data Exposure (Unauthenticated SQL Dump Download) | [student-grading/02-SQLdump暴露.md](student-grading/02-SQLdump%E6%9A%B4%E9%9C%B2.md) | pending |
+
+| 32 | SourceCodester Pet Grooming Billing Software 1.0 /index.php email= Use of Hard-coded Default Credentials | [pet-grooming/01-默认凭据.md](pet-grooming/01-%E9%BB%98%E8%AE%A4%E5%87%AD%E6%8D%AE.md) | pending |
+| 33 | SourceCodester Pet Grooming Billing Software 1.0 /admin/update_customer.php id= SQL Injection | [pet-grooming/02-SQL注入.md](pet-grooming/02-SQL%E6%B3%A8%E5%85%A5.md) | pending |
+| 34 | SourceCodester Pet Grooming Billing Software 1.0 /admin/order.php Missing Authorization (Protected Page Data Leaked in 302 Body) | [pet-grooming/03-鉴权失效泄露.md](pet-grooming/03-%E9%89%B4%E6%9D%83%E5%A4%B1%E6%95%88%E6%B3%84%E9%9C%B2.md) | pending |
