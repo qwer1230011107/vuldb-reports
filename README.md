@@ -49,3 +49,5 @@ Vulnerability reports for open-source PHP projects, reproduced locally (phpStudy
 | 34 | SourceCodester Pet Grooming Billing Software 1.0 /admin/order.php Missing Authorization (Protected Page Data Leaked in 302 Body) | [pet-grooming/03-鉴权失效泄露.md](pet-grooming/03-%E9%89%B4%E6%9D%83%E5%A4%B1%E6%95%88%E6%B3%84%E9%9C%B2.md) | pending |
 
 | 35 | SourceCodester Website Link Extractor 1.0 /index.php link.href= Cross-Site Scripting (DOM HTML Injection via Extracted Link Data) | [website-link-extractor/01-DOM注入XSS.md](website-link-extractor/01-DOM%E6%B3%A8%E5%85%A5XSS.md) | pending |
+
+| 36 | WPManageNinja FluentSnippets (easy-code-manager) 10.58 /index.php?fluent_snippets=1&snippet_secret[]= Unauthenticated Denial of Service | [easy-code-manager/01-未认证DoS.md](easy-code-manager/01-%E6%9C%AA%E8%AE%A4%E8%AF%81DoS.md) | pending |
