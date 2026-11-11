@@ -1,6 +1,6 @@
 # sourcecodester Drug Recommendation System Using Machine Learning, PHP, and MySQL Database V1.0 /patient.php 'txtname' Stored XSS Vulnerability
 
-- **Author:** （VulDB 账号名：提交时从凭据引用 `vuldb.txt` 读取填入，不落盘、不在报告中展示）
+- **Author:** qwer1230011107
 
 # Vendor and Software Links
 

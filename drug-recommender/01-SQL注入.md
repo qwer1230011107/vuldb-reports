@@ -1,5 +1,7 @@
 # sourcecodester Drug Recommendation System Using Machine Learning, PHP, and MySQL Database V1.0 /Admin/add_user.php?txtpassword= SQL injection (Blind, Unauthenticated)
 
+- **Author:** qwer1230011107
+
 # NAME OF AFFECTED PRODUCT(S)
 
 - Drug Recommendation System Using Machine Learning, PHP, and MySQL Database
