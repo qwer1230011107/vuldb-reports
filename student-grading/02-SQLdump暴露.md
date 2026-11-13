@@ -2,7 +2,7 @@
 
 ## Author
 
-- (submitter name pending user confirmation — will be filled from vuldb.txt account at submission time)
+- qwer1230011107
 
 ## Vendor and Software Links
 
